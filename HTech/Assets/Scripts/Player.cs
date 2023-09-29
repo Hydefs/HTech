@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEditor;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -11,11 +8,12 @@ public class Player : MonoBehaviour
 
     Animator animator;
 
-    float speed = 10f;
+    public float velocidad = 10f;
     float movimientoHorizontal;
-    float fuerzaSalto = 300f;
+    public float fuerzaSalto = 300f;
     bool derecha = true;
     bool puedeSaltar = true;
+    public bool powerUpSalto = false;
 
     void Start()
     {
@@ -53,6 +51,15 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("PowerupSalto") || collision.CompareTag("PowerupVelocidad"))
+        {
+            //Debug.Log("Test2");
+            powerUpSalto = true;
+            Destroy(collision.gameObject);
+        }
+    }
     private void Saltar()
     {
         puedeSaltar = false;
@@ -64,7 +71,7 @@ public class Player : MonoBehaviour
 
     private void Mover()
     {
-        Vector2 movimiento = new Vector2(movimientoHorizontal * speed, rb.velocity.y);
+        Vector2 movimiento = new Vector2(movimientoHorizontal * velocidad, rb.velocity.y);
         rb.velocity = movimiento;
 
         if(Mathf.Abs(movimientoHorizontal) > 0 && puedeSaltar)
