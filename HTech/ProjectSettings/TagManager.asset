@@ -7,11 +7,12 @@ TagManager:
   - Piso
   - PowerupSalto
   - PowerupVelocidad
+  - Enemigo
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - 

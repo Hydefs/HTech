@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,16 +9,17 @@ public class Player : MonoBehaviour
 
     Animator animator;
 
-    public float velocidad = 10f;
+    Salto salto;
+    Velocidad velocidad;
     float movimientoHorizontal;
-    public float fuerzaSalto = 300f;
     bool derecha = true;
     bool puedeSaltar = true;
-    public bool powerUpSalto = false;
     public bool isDead = false;
 
     void Start()
     {
+        salto = GetComponent<Salto>();
+        velocidad = GetComponent<Velocidad>();
         rb = GetComponent<Rigidbody2D>();   
         animator = GetComponent<Animator>();
     }
@@ -54,14 +56,26 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("PowerupSalto") || collision.CompareTag("PowerupVelocidad"))
+        if (!salto.powerup && collision.CompareTag("PowerupSalto"))
         {
-            //Debug.Log("Test2");
-            powerUpSalto = true;
+            Powerup powerup = collision.GetComponent<Powerup>();
+            salto.AplicarEfecto(powerup.multiplicador, powerup.duracion);
+            Destroy(collision.gameObject);
+
+        }
+        if (!velocidad.powerup && collision.CompareTag("PowerupVelocidad"))
+        {
+            Powerup powerup = collision.GetComponent<Powerup>();
+            velocidad.AplicarEfecto(powerup.multiplicador, powerup.duracion);
             Destroy(collision.gameObject);
         }
-    }
 
+        if (collision.CompareTag("Enemigo"))
+        {
+            isDead = true;
+            Destroy(collision.gameObject);
+        }
+    }  
 
     private void Saltar()
     {
@@ -69,12 +83,12 @@ public class Player : MonoBehaviour
         animator.SetBool("Saltar", true);
         animator.SetBool("Suelo", false);
 
-        rb.AddForce(new Vector2(0, fuerzaSalto));
+        rb.AddForce(new Vector2(0, salto.valor));
     }
 
     private void Mover()
     {
-        Vector2 movimiento = new Vector2(movimientoHorizontal * velocidad, rb.velocity.y);
+        Vector2 movimiento = new Vector2(movimientoHorizontal * velocidad.valor, rb.velocity.y);
         rb.velocity = movimiento;
 
         if(Mathf.Abs(movimientoHorizontal) > 0 && puedeSaltar)
