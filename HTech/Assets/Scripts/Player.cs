@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     bool derecha = true;
     bool puedeSaltar = true;
     public bool powerUpSalto = false;
+    public bool isDead = false;
 
     void Start()
     {
@@ -60,6 +61,8 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject);
         }
     }
+
+
     private void Saltar()
     {
         puedeSaltar = false;
