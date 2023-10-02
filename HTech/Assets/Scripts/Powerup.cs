@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour
 {
-    public float multiplicador;
+    [Range(1,2)] public float multiplicador;
     [Range(3,5)] public int duracion;
     public void AplicarEfecto(float powerupValor, bool powerupBoolean)
     {
